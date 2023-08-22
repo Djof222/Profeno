@@ -22,8 +22,7 @@ class Lead(models.Model):
     type_offre = fields.Selection([
         ('menuiserie_ext', 'Menuiserie Extérieure'),
         ('pergolas', 'Pergolas'),
-        ('menuiserie_int', 'Menuiserie Intérieure'),
-        ('condition', 'Conditions chantiers')
+        ('menuiserie_int', 'Menuiserie Intérieure')
     ], string='Type Offre')
     phase_vente = fields.Selection([
         ('offre_en_cours', 'Offre en cours'),
@@ -98,7 +97,8 @@ class Lead(models.Model):
     type_facturation = fields.Selection([
         ('40_50_10', '40% - 50% - 10%'),
         ('40_60', '40% - 60%'),
-        ('100', '100%')
+        ('100', '100%'),
+        ('condition', 'Conditions chantiers')
     ], string='Type de facturation')
 
     conditions_chantiers = fields.Selection([
