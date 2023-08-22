@@ -22,7 +22,8 @@ class Lead(models.Model):
     type_offre = fields.Selection([
         ('menuiserie_ext', 'Menuiserie Extérieure'),
         ('pergolas', 'Pergolas'),
-        ('menuiserie_int', 'Menuiserie Intérieure')
+        ('menuiserie_int', 'Menuiserie Intérieure'),
+        ('condition', 'Conditions chantiers')
     ], string='Type Offre')
     phase_vente = fields.Selection([
         ('offre_en_cours', 'Offre en cours'),
