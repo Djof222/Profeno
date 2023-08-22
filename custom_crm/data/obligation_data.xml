@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+        <!-- Create records for obligation.model -->
+        <record model="obligation.model" id="obligation_pas_d_obligation">
+            <field name="name">Pas d’obligation</field>
+        </record>
+        <record model="obligation.model" id="obligation_enregistrement">
+            <field name="name">Enregistrement</field>
+        </record>
+        <record model="obligation.model" id="obligation_agregation">
+            <field name="name">Agréation</field>
+        </record>
+        <record model="obligation.model" id="obligation_onss">
+            <field name="name">ONSS</field>
+        </record>
+        <record model="obligation.model" id="obligation_dimona">
+            <field name="name">Dimona</field>
+        </record>
+    </data>
+</odoo>

@@ -8,24 +8,82 @@
         <field name="arch" type="xml">
             <xpath expr="//group" position="after">
                 <group>
-                <group>
-                    <field name="ref_projet"/>
-                    <field name="token_jopps"/>
-                    <field name="date_creation"/>
+                    <group>
+                        <field name="ref_projet"/>
+                        <field name="token_jopps"/>
+                        <field name="date_creation"/>
+                    </group>
+                    <group>
+                        <field name="adresse_chantier"/>
+                        <field name="soumission_ferme"/>
+                        <field name="statut_covid"/>
+                        <field name="type_offre"/>
+                    </group>
+                    <group>
+                        <field name="phase_vente"/>
+                        <field name="no_jorpa"/>
+                        <field name="date_modification"/>
+                        <field name="emplacement_cle"/>
+                    </group>
                 </group>
-                <group>
-                    <field name="adresse_chantier"/>
-                    <field name="soumission_ferme"/>
-                    <field name="statut_covid"/>
-                    <field name="type_offre"/>
-                </group>
-                <group>
-                    <field name="phase_vente"/>
-                    <field name="no_jorpa"/>
-                    <field name="date_modification"/>
-                    <field name="emplacement_cle"/>
-                </group>
-                </group>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                <page string="Commercial" name="studio_page_EZAD7">
+                    <group>
+                        <!--                        <group>-->
+                        <!--&lt;!&ndash;                            <field name="ref_projet"/>&ndash;&gt;-->
+                        <!--                            <field name="token_jopps"/>-->
+                        <!--                            <field name="date_creation"/>-->
+                        <!--                        </group>-->
+                        <!--                        <group>-->
+                        <!--                            <field name="adresse_chantier"/>-->
+                        <!--                            <field name="soumission_ferme"/>-->
+                        <!--                            <field name="statut_covid"/>-->
+                        <!--                            <field name="type_offre"/>-->
+                        <!--                        </group>-->
+                        <group>
+                            <field name="phase_offre"/>
+                            <field name="no_offre_jopps"/>
+                            <field name="date_signature_probable"/>
+                            <field name="date_signature"/>
+                            <field name="date_dernier_contact"/>
+                            <field name="date_echeance"/>
+                            <field name="obligation_contrat" widget="many2many_checkboxes"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="promo"/>
+                            <field name="date_prochain_contact"/>
+                            <field name="moins_value_plus_value"/>
+                            <field name="semaine_livraison_estimee"/>
+                        </group>
+                        <group>
+
+                            <field name="montant_offre_jopps"/>
+                            <field name="type_contrat"/>
+                            <field name="type_facturation"/>
+                            <field name="conditions_chantiers"/>
+                            <field name="tva"/>
+                            <field name="garantie_decennale"/>
+                            <field name="etat_avancement"/>
+                            <field name="escompte"/>
+                            <field name="conditions_paiement"/>
+                        </group>
+
+
+                    </group>
+                </page>
+                <!--                <page string="Détail chantier" name="studio_page_oEOco">-->
+                <!--                    <group name="studio_group_oEOco">-->
+                <!--                        <group name="studio_group_oEOco_left"/>-->
+                <!--                        <group name="studio_group_oEOco_right"/>-->
+                <!--                    </group>-->
+                <!--                </page>-->
+                <!--                <page string="Fournitures" name="studio_page_Z4Dbr">-->
+                <!--                    <group name="studio_group_Z4Dbr">-->
+                <!--                        <group name="studio_group_Z4Dbr_left"/>-->
+                <!--                        <group name="studio_group_Z4Dbr_right"/>-->
+                <!--                    </group>-->
+                <!--                </page>-->
             </xpath>
 
 
