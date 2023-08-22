@@ -113,12 +113,11 @@ class Lead(models.Model):
         ('tva_6_institutions_handicapes', '6% Institutions pour handicapés'),
         ('tva_21', '21'),
         ('tva_6', '6')
-    ], string='Cautionnement')
+    ], string='TVA')
 
     garantie_decennale = fields.Selection([
         ('oui', 'Oui'),
         ('non', 'Non'),
-        ('nom', 'Nom')
     ], string='Garantie décennale')
 
     etat_avancement = fields.Boolean(string="Etat d'avancement")
