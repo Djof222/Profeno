@@ -1,0 +1,36 @@
+<odoo>
+
+    <record id="crm_case_form_view_oppor" model="ir.ui.view">
+        <field name="name">crm.lead.oppor.inherited.crm</field>
+        <field name="model">crm.lead</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <group>
+                <group>
+                    <field name="ref_projet"/>
+                    <field name="token_jopps"/>
+                    <field name="date_creation"/>
+                </group>
+                <group>
+                    <field name="adresse_chantier"/>
+                    <field name="soumission_ferme"/>
+                    <field name="statut_covid"/>
+                    <field name="type_offre"/>
+                </group>
+                <group>
+                    <field name="phase_vente"/>
+                    <field name="no_jorpa"/>
+                    <field name="date_modification"/>
+                    <field name="emplacement_cle"/>
+                </group>
+                </group>
+            </xpath>
+
+
+        </field>
+    </record>
+
+
+</odoo>
