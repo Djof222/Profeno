@@ -9,7 +9,7 @@ class Lead(models.Model):
     ref_projet = fields.Char(string='Ref projet')
     ref_projet = fields.Char(string='Ref projet')
     token_jopps = fields.Char(string='Token JoPPS')
-    date_creation = fields.Date(string='Date de création')
+    date_creation = fields.Datetime(string='Date de création')
     adresse_chantier = fields.Boolean(string='Adresse du chantier')
     soumission_ferme = fields.Selection([
         ('soumission', 'Soumission'),
