@@ -77,7 +77,8 @@
                         <group>
                             <field name="dossier_de_pose"/>
                             <field name="attachment_filename" invisible="1"/>
-                            <field name="attachment" filename="attachment_filename" attrs="{'invisible': [('dossier_de_pose', '=', False)]}" widget="binary" />
+                            <field name="attachment" filename="attachment_filename"
+                                   attrs="{'invisible': [('dossier_de_pose', '=', False)]}" widget="binary"/>
                             <field name="mesure_par"/>
                             <field name="mesureur"/>
                             <field name="aide_pose_heure_fin"/>
@@ -92,12 +93,16 @@
                         </group>
                     </group>
                 </page>
-                <!--                <page string="Fournitures" name="studio_page_Z4Dbr">-->
-                <!--                    <group name="studio_group_Z4Dbr">-->
-                <!--                        <group name="studio_group_Z4Dbr_left"/>-->
-                <!--                        <group name="studio_group_Z4Dbr_right"/>-->
-                <!--                    </group>-->
-                <!--                </page>-->
+                <page string="Fournitures" name="studio_page_Z4Dbr">
+                    <group>
+                        <group>
+                            <field name="sale_order_template_id" invisible="1"/>
+                            <field name="products" widget="many2many_checkboxes" string="Produits"/>
+                        </group>
+<!--                        <group>-->
+<!--                        </group>-->
+                    </group>
+                </page>
             </xpath>
 
 
