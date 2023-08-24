@@ -91,6 +91,7 @@ class Lead(models.Model):
         ('non', 'Non')
     ], string='moins value plus value')
 
+    type_contrat_report = fields.Char(string='Type contrat', compute="_compute_type_contrat_report")
     semaine_livraison_estimee = fields.Char(string='Semaine livraison estimée')
     montant_offre_jopps = fields.Float(string='Montant Offre JoPPS')
     type_contrat = fields.Selection([
@@ -194,42 +195,29 @@ class Lead(models.Model):
     ], string='Aide pose Heure Début')
     attachment = fields.Binary(string='Attachement')
     attachment_filename = fields.Char(string='Attachment Filename')
+    type_contrat = fields.Selection([
+        ('enlevement', 'Enlevement'),
+        ('pose_marche_prive_sans_architecte', 'Pose marché privé : travaux sans architecte'),
+        ('livraison', 'Livraison'),
+        ('pose_marche_prive_avec_architecte', 'Pose marché privé : travaux avec architecte'),
+        ('pose_marche_public', 'Pose marché public'),
+        ('pose_sous-traitance', 'Pose sous-traitance')
+    ], string='Type contrat')
 
-    # @api.model
-    # def create(self, values):
-    #     lead = super(Lead, self).create(values)
-    #     lead.update_sale_order_template()
-    #     return lead
-    #
-    # def write(self, values):
-    #     res = super(Lead, self).write(values)
-    #     if 'partner_id' in values or 'products' in values:
-    #         self.update_sale_order_template()
-    #     return res
-    #
-    # def update_sale_order_template(self):
-    #     for lead in self:
-    #         if lead.partner_id and lead.products:
-    #             if not lead.sale_order_template_id:
-    #                 sale_order_template = self.env['sale.order.template'].create({
-    #                     'name': f"Template for {lead.name}",
-    #                     'sale_order_template_line_ids': [(0, 0, {'product_id': product.id, 'product_uom_qty': 0}) for product
-    #                                                      in
-    #                                                      lead.products],
-    #                 })
-    #                 lead.sale_order_template_id = sale_order_template.id
-    #             else:
-    #                 template_products = lead.sale_order_template_id.sale_order_template_line_ids.mapped('product_id')
-    #                 new_products = lead.products - template_products
-    #                 deleted_products = template_products - lead.products
-    #
-    #                 for product in new_products:
-    #                     lead.sale_order_template_id.sale_order_template_line_ids = [(0, 0, {'product_id': product.id, 'product_uom_qty': 0})]
-    #
-    #                 for product in deleted_products:
-    #                     line_to_delete = lead.sale_order_template_id.sale_order_template_line_ids.filtered(
-    #                         lambda line: line.product_id == product)
-    #                     line_to_delete.unlink()
+    def _compute_type_contrat_report(self):
+        for rec in self:
+            type_contrat_report = ''
+            if rec.type_contrat == 'enlevement':
+                type_contrat_report = 'Enlevement'
+            if rec.type_contrat == 'pose_marche_prive_sans_architecte':
+                type_contrat_report = 'Pose marché privé : travaux sans architecte'
+            if rec.type_contrat == 'livraison':
+                type_contrat_report = 'Livraison'
+            if rec.type_contrat == 'pose_marche_public':
+                type_contrat_report = 'Pose marché public'
+            if rec.type_contrat == 'pose_sous-traitance':
+                type_contrat_report = 'Pose sous-traitance'
+            rec.type_contrat_report = type_contrat_report
 
 
 class SaleOrder(models.Model):
