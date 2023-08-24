@@ -12,6 +12,7 @@
                         <field name="ref_projet"/>
                         <field name="token_jopps"/>
                         <field name="date_creation"/>
+                        <field name="jopps_existant"/>
                     </group>
                     <group>
                         <field name="adresse_chantier"/>

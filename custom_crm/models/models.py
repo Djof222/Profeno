@@ -10,6 +10,7 @@ class Lead(models.Model):
     ref_projet = fields.Char(string='Ref projet')
     token_jopps = fields.Char(string='Token JoPPS')
     date_creation = fields.Datetime(string='Date de création')
+    jopps_existant = fields.Boolean(string='Offre déjà existante dans JoPPS')
     adresse_chantier = fields.Boolean(string='Adresse du chantier')
     soumission_ferme = fields.Selection([
         ('soumission', 'Soumission'),
@@ -194,40 +195,41 @@ class Lead(models.Model):
     attachment = fields.Binary(string='Attachement')
     attachment_filename = fields.Char(string='Attachment Filename')
 
-    @api.model
-    def create(self, values):
-        lead = super(Lead, self).create(values)
-        lead.update_sale_order_template()
-        return lead
-
-    def write(self, values):
-        res = super(Lead, self).write(values)
-        if 'partner_id' in values or 'products' in values:
-            self.update_sale_order_template()
-        return res
-
-    def update_sale_order_template(self):
-        for lead in self:
-            if lead.partner_id and lead.products:
-                if not lead.sale_order_template_id:
-                    sale_order_template = self.env['sale.order.template'].create({
-                        'name': f"Template for {lead.name}",
-                        'sale_order_template_line_ids': [(0, 0, {'product_id': product.id}) for product in
-                                                         lead.products],
-                    })
-                    lead.sale_order_template_id = sale_order_template.id
-                else:
-                    template_products = lead.sale_order_template_id.sale_order_template_line_ids.mapped('product_id')
-                    new_products = lead.products - template_products
-                    deleted_products = template_products - lead.products
-
-                    for product in new_products:
-                        lead.sale_order_template_id.sale_order_template_line_ids = [(0, 0, {'product_id': product.id})]
-
-                    for product in deleted_products:
-                        line_to_delete = lead.sale_order_template_id.sale_order_template_line_ids.filtered(
-                            lambda line: line.product_id == product)
-                        line_to_delete.unlink()
+    # @api.model
+    # def create(self, values):
+    #     lead = super(Lead, self).create(values)
+    #     lead.update_sale_order_template()
+    #     return lead
+    #
+    # def write(self, values):
+    #     res = super(Lead, self).write(values)
+    #     if 'partner_id' in values or 'products' in values:
+    #         self.update_sale_order_template()
+    #     return res
+    #
+    # def update_sale_order_template(self):
+    #     for lead in self:
+    #         if lead.partner_id and lead.products:
+    #             if not lead.sale_order_template_id:
+    #                 sale_order_template = self.env['sale.order.template'].create({
+    #                     'name': f"Template for {lead.name}",
+    #                     'sale_order_template_line_ids': [(0, 0, {'product_id': product.id, 'product_uom_qty': 0}) for product
+    #                                                      in
+    #                                                      lead.products],
+    #                 })
+    #                 lead.sale_order_template_id = sale_order_template.id
+    #             else:
+    #                 template_products = lead.sale_order_template_id.sale_order_template_line_ids.mapped('product_id')
+    #                 new_products = lead.products - template_products
+    #                 deleted_products = template_products - lead.products
+    #
+    #                 for product in new_products:
+    #                     lead.sale_order_template_id.sale_order_template_line_ids = [(0, 0, {'product_id': product.id, 'product_uom_qty': 0})]
+    #
+    #                 for product in deleted_products:
+    #                     line_to_delete = lead.sale_order_template_id.sale_order_template_line_ids.filtered(
+    #                         lambda line: line.product_id == product)
+    #                     line_to_delete.unlink()
 
 
 class SaleOrder(models.Model):
@@ -238,7 +240,30 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).default_get(fields)
         if self.env.context.get('active_model') and self.env.context.get('active_model') == 'crm.lead':
             lead = self.env['crm.lead'].browse(self.env.context.get('active_id'))
-            res['sale_order_template_id'] = lead.sale_order_template_id.id
+            sale_order_template_id = lead.company_id.sale_order_template_id
+            if not sale_order_template_id:
+                sale_order_template = self.env['sale.order.template'].create({
+                    'name': f"Default Template",
+                    'sale_order_template_line_ids': [(0, 0, {'product_id': product.id, 'product_uom_qty': 0}) for
+                                                     product
+                                                     in
+                                                     lead.products],
+                })
+                lead.company_id.sale_order_template_id = sale_order_template.id
+            else:
+                template_products = sale_order_template_id.sale_order_template_line_ids.mapped('product_id')
+                new_products = lead.products - template_products
+                deleted_products = template_products - lead.products
+
+                for product in new_products:
+                    sale_order_template_id.sale_order_template_line_ids = [
+                        (0, 0, {'product_id': product.id, 'product_uom_qty': 0})]
+
+                for product in deleted_products:
+                    line_to_delete = sale_order_template_id.sale_order_template_line_ids.filtered(
+                        lambda line: line.product_id == product)
+                    line_to_delete.unlink()
+            # res['sale_order_template_id'] = lead.sale_order_template_id.id
 
         return res
 
