@@ -7,9 +7,8 @@ class Lead(models.Model):
     _inherit = 'crm.lead'
 
     ref_projet = fields.Char(string='Ref projet')
-    ref_projet = fields.Char(string='Ref projet')
     token_jopps = fields.Char(string='Token JoPPS')
-    date_creation = fields.Datetime(string='Date de création')
+    date_creation = fields.Datetime(string='Date de création', tracking=True)
     jopps_existant = fields.Boolean(string='Offre déjà existante dans JoPPS')
     adresse_chantier = fields.Boolean(string='Adresse du chantier')
     soumission_ferme = fields.Selection([
@@ -24,7 +23,7 @@ class Lead(models.Model):
         ('menuiserie_ext', 'Menuiserie Extérieure'),
         ('pergolas', 'Pergolas'),
         ('menuiserie_int', 'Menuiserie Intérieure')
-    ], string='Type Offre')
+    ], string='Type Offre', tracking=True)
     phase_vente = fields.Selection([
         ('offre_en_cours', 'Offre en cours'),
         ('offre_signee', 'Offre Signée'),
@@ -39,9 +38,9 @@ class Lead(models.Model):
         ('livre_facturer', 'Livré-à-facturer'),
         ('cloture', 'Clôturé'),
         ('offre_non_suivie', 'Offre non suivie')
-    ], string='Phase de vente')
+    ], string='Phase de vente', tracking=True)
     no_jorpa = fields.Char(string='N°JoRPA')
-    date_modification = fields.Datetime(string='Date de modification')
+    date_modification = fields.Datetime(string='Date de modification', tracking=True)
     emplacement_cle = fields.Integer(string='Emplacement clé (boite)')
 
     phase_offre = fields.Selection([
@@ -55,15 +54,15 @@ class Lead(models.Model):
         ('offre_acceptee_sous_reserve', 'Offre Acceptée sous réserve'),
         ('offre_refusee_autre_raison', 'Offre refusée - Autre raison'),
         ('offre_non_suivie', 'Offre non suivie')
-    ], string='Phase offre')
+    ], string='Phase offre', tracking=True)
 
     no_offre_jopps = fields.Char(string='N° Offre JoPPS')
     date_signature_probable = fields.Date(string='Date signature probable')
-    date_signature = fields.Date(string='Date Signature')
+    date_signature = fields.Date(string='Date Signature', tracking=True)
     date_dernier_contact = fields.Date(string='Date dernier contact')
     date_echeance = fields.Date(string='Date échéance')
 
-    obligation_contrat = fields.Many2many('obligation.model', string='Obligation contrat')
+    obligation_contrat = fields.Many2many('obligation.model', string='Obligation contrat', tracking=True)
     products = fields.Many2many('product.product', string='Products')
     sale_order_template_id = fields.Many2one(
         comodel_name='sale.order.template',
@@ -91,9 +90,9 @@ class Lead(models.Model):
         ('non', 'Non')
     ], string='moins value plus value')
 
-    type_contrat_report = fields.Char(string='Type contrat', compute="_compute_type_contrat_report")
+    type_contrat_report = fields.Char(string='Type contrat', compute="_compute_type_contrat_report", store=True)
     semaine_livraison_estimee = fields.Char(string='Semaine livraison estimée')
-    montant_offre_jopps = fields.Float(string='Montant Offre JoPPS')
+    montant_offre_jopps = fields.Float(string='Montant Offre JoPPS', tracking=True)
     type_contrat = fields.Selection([
         ('enlevement', 'Enlevement'),
         ('pose_marche_prive_sans_architecte', 'Pose marché privé : travaux sans architecte'),
@@ -152,6 +151,7 @@ class Lead(models.Model):
         ('renovation', 'Renovation'),
         ('m_nouvelle_const', 'mixte nouvelle construction+renovation'),
     ], string='Type de chantier')
+    finitions_exterieur_ids = fields.Many2many("crm.lead", string='Finitions Extérieur', tracking=True)
 
     acces_chantier = fields.Selection([
         ('pas_de_precision', 'Pas de précision'),
@@ -291,3 +291,12 @@ class Obligation(models.Model):
 
     name = fields.Char(string='Name', required=True)
     description = fields.Text(string='Description')
+
+
+class FinitionExterieur(models.Model):
+    _name = 'finition.exterieur'
+    _description = 'Finition Extérieur'
+    _rec_name = 'name'
+
+    name = fields.Char(string='Name', required=True)
+

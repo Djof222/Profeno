@@ -26,6 +26,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/obligation_data.xml',
+        'data/finition_exterieur_data.xml',
         'report/crm_report.xml',
         'views/views.xml',
     ],
