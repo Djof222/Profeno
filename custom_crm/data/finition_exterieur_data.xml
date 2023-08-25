@@ -4,6 +4,9 @@
         <record id="finition_pas_de_finition" model="finition.exterieur">
             <field name="name">Pas de finition</field>
         </record>
+        <record id="finition_pas_de_finition" model="finition.exterieur">
+            <field name="name">Nouvelle construction</field>
+        </record>
 
         <record id="finition_silicone_blanc" model="finition.exterieur">
             <field name="name">Silicone à peindre blanc</field>
