@@ -153,6 +153,15 @@ class Lead(models.Model):
         ('m_nouvelle_const', 'mixte nouvelle construction+renovation'),
     ], string='Type de chantier')
 
+    acces_chantier = fields.Selection([
+        ('pas_de_precision', 'Pas de précision'),
+        ('acces_difficile', 'Accès difficile - Voir remarques'),
+        ('par_devant', 'Par devant'),
+        ('par_derriere', 'Par derrière'),
+        ('client_sur_place', 'Client sur place'),
+        ('cle_bureau', 'Clé bureau')
+    ], string='Accès chantier')
+
     type_batiment = fields.Selection([
         ('indetermine', 'Indéterminé'),
         ('villa', 'Villa'),
