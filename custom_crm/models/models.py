@@ -147,6 +147,25 @@ class Lead(models.Model):
         ('40_acompte_solde_15_jours', '40 % Acompte - Solde 15 jours')
     ], string='Conditions de paiement')
 
+    type_chantier = fields.Selection([
+        ('nouvelle_construction', 'Nouvelle construction'),
+        ('renovation', 'Renovation'),
+        ('m_nouvelle_const', 'mixte nouvelle construction+renovation'),
+    ], string='Type de chantier')
+
+    type_batiment = fields.Selection([
+        ('indetermine', 'Indéterminé'),
+        ('villa', 'Villa'),
+        ('1_facade', '1 Façade'),
+        ('2_facade', '2 Façades'),
+        ('3_facade', '3 Façades'),
+        ('4_facade', '4 Façades'),
+        ('appartement', 'Appartement'),
+        ('bel_etage', 'Bel Etage'),
+        ('prefabriquee', 'Préfabriquée'),
+        ('polyvilla', 'Polyvilla')
+    ], string='Type de bâtiment',)
+
     dossier_de_pose = fields.Boolean(string='Dossier de pose')
     mesure_par = fields.Selection([
         ('PROFENO', 'PROFENO'),
