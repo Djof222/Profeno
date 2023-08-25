@@ -151,7 +151,8 @@ class Lead(models.Model):
         ('renovation', 'Renovation'),
         ('m_nouvelle_const', 'mixte nouvelle construction+renovation'),
     ], string='Type de chantier')
-    finitions_interieur_ids = fields.Many2many("finition.exterieur", string='Finitions Intérieur', tracking=True)
+
+    finitions_exterieur_ids = fields.Many2many("finition.exterieur", string='Finitions Extérieur', tracking=True)
     finitions_interieur_ids = fields.Many2many("finition.interieur", string='Finitions Intérieur', tracking=True)
 
     acces_chantier = fields.Selection([
