@@ -153,6 +153,8 @@ class Lead(models.Model):
     ], string='Type de chantier')
     finitions_exterieur_ids = fields.Many2many("finition.exterieur", string='Finitions Extérieur', tracking=True)
 
+    finitions_interieur_ids = fields.Many2many("finition.exterieur", string='Finitions Intérieur', tracking=True)
+
     acces_chantier = fields.Selection([
         ('pas_de_precision', 'Pas de précision'),
         ('acces_difficile', 'Accès difficile - Voir remarques'),
@@ -173,7 +175,7 @@ class Lead(models.Model):
         ('bel_etage', 'Bel Etage'),
         ('prefabriquee', 'Préfabriquée'),
         ('polyvilla', 'Polyvilla')
-    ], string='Type de bâtiment',)
+    ], string='Type de bâtiment', )
 
     dossier_de_pose = fields.Boolean(string='Dossier de pose')
     mesure_par = fields.Selection([
@@ -300,3 +302,10 @@ class FinitionExterieur(models.Model):
 
     name = fields.Char(string='Name', required=True)
 
+
+class FinitionInterieur(models.Model):
+    _name = 'finition.interieur'
+    _description = 'Finition Intérieur'
+    _rec_name = 'name'
+
+    name = fields.Char(string='Name', required=True)
