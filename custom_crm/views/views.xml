@@ -16,6 +16,8 @@
                     </group>
                     <group>
                         <field name="adresse_chantier"/>
+                        <field name="adresse_chantier_char" attrs="{'invisible': [('adresse_chantier', '=', False)]}"/>
+                         <field name="qr_code_adresse_chantier" widget='image' class="oe_avatar" attrs="{'invisible': [('adresse_chantier', '=', False)]}"/>
                         <field name="soumission_ferme"/>
                         <field name="statut_covid"/>
                         <field name="type_offre"/>

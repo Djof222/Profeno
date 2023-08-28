@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_crm_route_lead_custom" model="ir.actions.report">
+        <field name="name">Route Pose Report</field>
+        <field name="model">crm.lead</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_crm.custom_crm_route_lead_report</field>
+        <field name="report_file">custom_crm.custom_crm_route_lead_report</field>
+        <field name="binding_model_id" ref="model_crm_lead"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="custom_crm_route_lead_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="custom_crm.custom_crm_route_report_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <t t-call="custom_crm.external_layout_boxed">
+            <t t-out="0"/>
+        </t>
+
+    </template>
+
+    <template id="external_layout_boxed">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            <div class="o_boxed_header">
+                <div class="row mb8">
+                    <span t-esc="o.name"/>
+                    <span t-if="o.order_ids" t-esc="o.order_ids[0].name"/>
+                </div>
+            </div>
+        </div>
+
+        <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+            <div class="text-center">
+                <div t-field="company.report_footer"/>
+                <div t-if="report_type == 'pdf'">
+                    Page:
+                    <span class="page"/>
+                    /
+                    <span class="topage"/>
+                </div>
+                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-field="o.name"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="custom_crm_route_report_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <div class="row">
+                        <br/>
+                        <br/>
+                        <p style="text-align: left;">
+                            <strong style="display: inline-block;">Client :</strong>
+                            <span style="display: inline-block; margin-right:20px;" t-esc="doc.company_type_char"/>
+                            <span style="display: inline-block; margin-right:20px;" t-esc="doc.partner_id.name"/>
+                            GSM
+                            <span style="display: inline-block; margin-right:20px;" t-esc="doc.partner_id.mobile"/>
+
+                            <br/>
+                            <br/>
+
+                            <strong style="display: inline-block;">ADRESSE CHANTIER :</strong>
+                            <span style="display: inline-block; margin-right:20px;" t-esc="doc.adresse_chantier_char"/>
+                            <img t-if="doc.qr_code_adresse_chantier"
+                                 t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', doc.qr_code_adresse_chantier, 400, 400)"
+                                 alt="QR Code" style="height:100px; margin-left:60px;"/>
+
+
+                        </p>
+                        <br/>
+                        <p style="text-align: left;">
+                            <strong t-if="doc.partner_id.email" style="display: inline-block;">type de chantier :
+                            </strong>
+                            <span style="display: inline-block; margin-right:20px;" t-esc="doc.partner_id.street"/>
+                            <strong t-if="doc.partner_id.zip" style="display: inline-block;">type de bâtiment :
+                            </strong>
+                            <strong t-if="doc.partner_id.city" style="display: inline-block;">aide à la pose :</strong>
+                            <span style="display: inline-block;" t-esc="doc.partner_id.zip"/>
+                            <span style="display: inline-block;" t-esc="doc.partner_id.city"/>
+                        </p>
+                        <br/>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <table class="table table-sm o_main_table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Date</th>
+                                <th>De...à... Heure</th>
+                                <th>Nmbr de personnes</th>
+                                <th>Responsable Chantier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jour 1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Jour 2</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Jour 3</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Jour 4</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Jour 5</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tr style="border: 1pt solid black;">
+                            <td style="border: 1pt solid black;">
+                                remarques responsable de chantier:
+
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+
+                                remarques mesureur:
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+
+
+                            </td>
+                        </tr>
+
+                    </table>
+                    <strong>FOURNITURES CONCERNES:</strong>
+                    <br/>
+                    <span style="display: inline-block; margin-right:40px;">finition extérieur:</span>
+                    <span>finition intérieur:</span>
+
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+
+                <table class="table table-sm table-borderless">
+                    <thead>
+                        <th>Nom Tâche</th>
+                        <th>Projet Ref</th>
+                        <th>fourniseur</th>
+                        <th>Responsable</th>
+                        <th>Confirmé pour</th>
+                        <th>Remarques</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div  class="page" style="page-break-before:always;">
+                    <strong style="font-size: 20px;">REMARQUES EXECUTION:</strong> <br/>
+                    <strong>CHANTIER TERMINE OUI/NON</strong> <br/>
+                    <p>SILICONE EXT FAIT OUI /NON / PAS CONCERNE
+                        <br/>
+                        MESURAGE CORRECT OUI / NON REMARQUES
+                        <br/>
+                        RECEPTION SIGNE OUI /NON RAISON
+                    </p>
+                    <strong>PROBLEMES A SOLUTIONER</strong>
+                    <table class="table table-bordered mt32">
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br/>
+                    <br/>
+
+                    <strong>SOLUTIONS</strong>
+
+                    <table class="table table-bordered mt32">
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="page" style="page-break-before:always;">
+                    <h3 style="text-align:center;">PV DE RÉCEPTION FIN DE POSE - exemplaire PROFENO</h3>
+                    <span> <strong>V -</strong> si ok, <strong>X -</strong> si problème (n'hésitez pas à le décrire), <strong>O -</strong> si rien à déclarer </span>
+                    <table></table>
+                    <strong>AUTRES REMARQUES:</strong><br/>
+                    <strong>DATE:</strong><br/>
+                    <strong>Signiature Profeno</strong><br/>
+                    <strong>Signiature Client</strong><br/>
+                </div>
+<!--                <div class="page" style="page-break-before:always;">-->
+<!--                    <h3 style="text-align:center;">PV DE RÉCEPTION FIN DE POSE - exemplaire CLIENT </h3>-->
+<!--                    <span> <strong>V -</strong> si ok, <strong>X -</strong> si problème (n'hésitez pas à le décrire), <strong>O -</strong> si rien à déclarer </span>-->
+<!--                    <table></table>-->
+<!--                    <strong>AUTRES REMARQUES:</strong><br/>-->
+<!--                    <strong>DATE:</strong><br/>-->
+<!--                    <strong>Signiature Profeno</strong><br/>-->
+<!--                    <strong>Signiature Client</strong><br/>-->
+<!--                </div>-->
+
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

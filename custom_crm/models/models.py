@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
+import qrcode
 from odoo import models, fields, api, _
-
+import base64
+from io import BytesIO
 
 class Lead(models.Model):
     _inherit = 'crm.lead'
@@ -12,6 +14,7 @@ class Lead(models.Model):
     date_creation = fields.Datetime(string='Date de création')
     jopps_existant = fields.Boolean(string='Offre déjà existante dans JoPPS')
     adresse_chantier = fields.Boolean(string='Adresse du chantier')
+    adresse_chantier_char = fields.Char(string='Adresse du chantier')
     soumission_ferme = fields.Selection([
         ('soumission', 'Soumission'),
         ('ferme', 'Ferme')
@@ -92,6 +95,7 @@ class Lead(models.Model):
     ], string='moins value plus value')
 
     type_contrat_report = fields.Char(string='Type contrat', compute="_compute_type_contrat_report")
+    company_type_char = fields.Char(string='Type contrat', compute="_compute_type_contrat_report")
     semaine_livraison_estimee = fields.Char(string='Semaine livraison estimée')
     montant_offre_jopps = fields.Float(string='Montant Offre JoPPS')
     type_contrat = fields.Selection([
@@ -203,10 +207,34 @@ class Lead(models.Model):
         ('pose_marche_public', 'Pose marché public'),
         ('pose_sous-traitance', 'Pose sous-traitance')
     ], string='Type contrat')
+    qr_code_adresse_chantier = fields.Binary(string="QR Code Adresse Chantier",
+                                             compute='_compute_qr_code_adresse_chantier')
+
+    @api.depends('adresse_chantier_char')
+    def _compute_qr_code_adresse_chantier(self):
+        for rec in self:
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=3,
+                border=4,
+            )
+            qr.add_data(rec.adresse_chantier_char)
+            qr.make(fit=True)
+            img = qr.make_image()
+            temp = BytesIO()
+            img.save(temp, format="PNG")
+            qr_image = base64.b64encode(temp.getvalue())
+            rec.qr_code_adresse_chantier = qr_image
 
     def _compute_type_contrat_report(self):
         for rec in self:
             type_contrat_report = ''
+            company_type_char = ''
+            if rec.partner_id.company_type == 'person':
+                company_type_char = 'Individu'
+            elif rec.partner_id.company_type == 'company':
+                company_type_char = 'Société'
             if rec.type_contrat == 'enlevement':
                 type_contrat_report = 'Enlevement'
             if rec.type_contrat == 'pose_marche_prive_sans_architecte':
@@ -218,6 +246,7 @@ class Lead(models.Model):
             if rec.type_contrat == 'pose_sous-traitance':
                 type_contrat_report = 'Pose sous-traitance'
             rec.type_contrat_report = type_contrat_report
+            rec.company_type_char = company_type_char
 
 
 class SaleOrder(models.Model):

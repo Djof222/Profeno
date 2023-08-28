@@ -27,6 +27,7 @@
         'security/ir.model.access.csv',
         'data/obligation_data.xml',
         'report/crm_report.xml',
+        'report/crm_route_report.xml',
         'views/views.xml',
     ],
     # only loaded in demonstration mode
