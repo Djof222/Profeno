@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+        <!-- Ajout des enregistrements de la classe Finition Exterieur -->
+        <record id="finition_pas_de_finition" model="finition.exterieur">
+            <field name="name">Pas de finition</field>
+        </record>
+        <record id="finition_pas_de_finition" model="finition.exterieur">
+            <field name="name">Nouvelle construction</field>
+        </record>
+
+        <record id="finition_silicone_blanc" model="finition.exterieur">
+            <field name="name">Silicone à peindre blanc</field>
+        </record>
+
+        <record id="finition_silicone_transparent" model="finition.exterieur">
+            <field name="name">Silicone à peindre transparent</field>
+        </record>
+
+        <record id="finition_cimentage" model="finition.exterieur">
+            <field name="name">Cimentage</field>
+        </record>
+
+        <!-- Ajoutez les autres enregistrements de manière similaire -->
+
+    </data>
+</odoo>

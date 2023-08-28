@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_report_crm_lead_custom" model="ir.actions.report">
-        <field name="name">Custom CRM Lead Report</field>
+        <field name="name">Attestation 6%</field>
         <field name="model">crm.lead</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">custom_crm.custom_crm_lead_report</field>

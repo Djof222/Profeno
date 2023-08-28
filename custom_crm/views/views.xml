@@ -78,6 +78,10 @@
                 <page string="Détail chantier" name="studio_page_oEOco">
                     <group>
                         <group>
+                            <field name="type_chantier"/>
+                            <field name="finitions_exterieur_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="finitions_interieur_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="acces_chantier"/>
                             <field name="dossier_de_pose"/>
                             <field name="attachment_filename" invisible="1"/>
                             <field name="attachment" filename="attachment_filename"
@@ -88,7 +92,9 @@
 
 
                         </group>
-                        <group>3
+                        <group>
+                            <field name="type_batiment"/>
+                            <field name="aide_a_la_pose"/>
                             <field name="remarques_chantier"/>
                             <field name="remarques_mesurage"/>
                             <field name="mesure_le"/>
