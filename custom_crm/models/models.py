@@ -5,6 +5,7 @@ from odoo import models, fields, api, _
 import base64
 from io import BytesIO
 
+
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
@@ -256,6 +257,18 @@ class Lead(models.Model):
     qr_code_adresse_chantier = fields.Binary(string="QR Code Adresse Chantier",
                                              compute='_compute_qr_code_adresse_chantier')
 
+    def _default_custom_products(self):
+        products = self.env['product.template'].search([('detailed_type', '=', 'consu'), ('purchase_ok', '=', True)])
+        custom_products = [(0, 0, {
+            'product_id': product.id,
+            'exist': False,
+            'precision': '',
+        }) for product in products]
+        return custom_products
+
+    custom_product_ids = fields.One2many('custom.product', 'lead_id', string='Custom Products',
+                                         default=_default_custom_products)
+
     @api.depends('adresse_chantier_char')
     def _compute_qr_code_adresse_chantier(self):
         for rec in self:
@@ -354,3 +367,13 @@ class FinitionInterieur(models.Model):
     _rec_name = 'name'
 
     name = fields.Char(string='Name', required=True)
+
+
+class CustomProduct(models.Model):
+    _name = 'custom.product'
+    _description = 'Custom Product'
+
+    product_id = fields.Many2one('product.template', string='Product')
+    exist = fields.Boolean(string='Exists')
+    precision = fields.Text(string='Precision')
+    lead_id = fields.Many2one('crm.lead', string='Lead')
