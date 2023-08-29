@@ -288,7 +288,7 @@ class Lead(models.Model):
                         custom_product_vals = {
                             'lead_id': lead.id,
                             'product_id': product.id,
-                            'exist': True,
+                            'exist': False,
                             'precision': 'Default Text',
                         }
                         self.env['custom.product'].create(custom_product_vals)
