@@ -289,7 +289,7 @@ class Lead(models.Model):
                             'lead_id': lead.id,
                             'product_id': product.id,
                             'exist': False,
-                            'precision': 'Default Text',
+                            'precision': '',
                         }
                         self.env['custom.product'].create(custom_product_vals)
 
@@ -423,7 +423,7 @@ class ProductTemplate(models.Model):
                             'lead_id': lead.id,
                             'product_id': product.id,
                             'exist': False,
-                            'precision': 'Default Text',
+                            'precision': '',
                         }
                         self.env['custom.product'].create(custom_product_vals)
 
