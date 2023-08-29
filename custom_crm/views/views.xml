@@ -102,25 +102,26 @@
                             <field name="remarques_mesurage"/>
                             <field name="mesure_le"/>
                             <field name="aide_pose_heure_debut"/>
+                            <field name="sale_order_template_id" invisible="1"/>
                         </group>
                     </group>
                 </page>
                 <page string="Fournitures" name="studio_page_Z4Dbr">
-                    <group>
-                        <group>
-                            <field name="sale_order_template_id" invisible="1"/>
-                            <field name="custom_product_ids" nolabel="1" widget="one2many" create="0" delete="0">
-                                <tree>
+                    <!-- <group> -->
+                        <!-- <group> -->
+
+                            <field name="custom_product_ids" nolabel="1" widget="one2many">
+                                <tree editable="bottom" create="0" delete="0">
                                     <field name="product_id"/>
-                                    <field name="exist"/>
+                                    <field name="exist" string=" "/>
                                     <field name="precision"/>
                                 </tree>
                             </field>
                             <!--                            <field name="products" widget="many2many_checkboxes" string="Produits"/>-->
-                        </group>
+                        <!-- </group> -->
                         <!--                        <group>-->
                         <!--                        </group>-->
-                    </group>
+                    <!-- </group> -->
                 </page>
             </xpath>
 
