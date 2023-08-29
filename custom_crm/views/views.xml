@@ -6,9 +6,13 @@
         <field name="priority">20</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
+<!--            <xpath expr="//button[@name='action_sale_quotations_new']" position="after">-->
+<!--                <button string="Produits" name="create_custom_products" type="object" class="oe_highlight"/>-->
+<!--            </xpath>-->
             <xpath expr="//group" position="after">
                 <group>
                     <group>
+
                         <field name="ref_projet"/>
                         <field name="token_jopps"/>
                         <field name="date_creation"/>

@@ -269,6 +269,30 @@ class Lead(models.Model):
     custom_product_ids = fields.One2many('custom.product', 'lead_id', string='Custom Products',
                                          default=_default_custom_products)
 
+    def create_custom_products(self):
+        all_leads = self.env['crm.lead'].search([])
+        for lead in all_leads:
+            if lead.team_id:
+                domain = [
+                    ('detailed_type', '=', 'consu'),
+                    ('purchase_ok', '=', True),
+                ]
+                products = self.env['product.template'].search(domain)
+                for product in products:
+                    existing_custom_product = self.env['custom.product'].search([
+                        ('lead_id', '=', lead.id),
+                        ('product_id', '=', product.id),
+                    ], limit=1)
+
+                    if not existing_custom_product:
+                        custom_product_vals = {
+                            'lead_id': lead.id,
+                            'product_id': product.id,
+                            'exist': True,
+                            'precision': 'Default Text',
+                        }
+                        self.env['custom.product'].create(custom_product_vals)
+
     @api.depends('adresse_chantier_char')
     def _compute_qr_code_adresse_chantier(self):
         for rec in self:
@@ -377,3 +401,30 @@ class CustomProduct(models.Model):
     exist = fields.Boolean(string='Exists')
     precision = fields.Text(string='Precision')
     lead_id = fields.Many2one('crm.lead', string='Lead')
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super(ProductTemplate, self).create(vals_list)
+
+        for product in products:
+            if product.detailed_type == 'consu' and product.purchase_ok:
+                all_leads = self.env['crm.lead'].search([])
+                for lead in all_leads:
+                    existing_custom_product = self.env['custom.product'].search([
+                        ('lead_id', '=', lead.id),
+                        ('product_id', '=', product.id),
+                    ], limit=1)
+
+                    if not existing_custom_product:
+                        custom_product_vals = {
+                            'lead_id': lead.id,
+                            'product_id': product.id,
+                            'exist': False,
+                            'precision': 'Default Text',
+                        }
+                        self.env['custom.product'].create(custom_product_vals)
+
+        return products
