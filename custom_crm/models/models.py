@@ -108,6 +108,22 @@ class Lead(models.Model):
         ('pose_sous-traitance', 'Pose sous-traitance')
     ], string='Type contrat')
 
+    etage = fields.Selection([
+        ('1', '1 étage'),
+        ('2', '2 étage'),
+        ('3', '3 étage'),
+        ('4', '4 étage'),
+        ('5', '5 étage'),
+        ('6', '6 étage'),
+        ('7', '7'),
+        ('8', '8'),
+        ('9', '9'),
+        ('10', '10'),
+        ('11', '11'),
+        ('12', '12'),
+        ('sous_sol', 'Sous Sol')
+    ], string='Étage')
+
     type_facturation = fields.Selection([
         ('40_50_10', '40% - 50% - 10%'),
         ('40_60', '40% - 60%'),
