@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
-user_access_crm_pipeline,access_crm_pipeline,model_crm_pipeline,odoo_multi_channel_crm.group_user,1,0,0,0
-manager_access_crm_pipeline,access_crm_pipeline,model_crm_pipeline,odoo_multi_channel_crm.group_manager,1,1,1,1
-
-user_access_crm_pipeline_mapping,access_crm_pipeline_mapping,model_crm_pipeline_mapping,odoo_multi_channel_crm.group_user,1,0,0,0
-manager_access_crm_pipeline_mapping,access_crm_pipeline_mapping,model_crm_pipeline_mapping,odoo_multi_channel_crm.group_manager,1,1,1,1
