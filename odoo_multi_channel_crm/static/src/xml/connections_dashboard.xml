@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<templates xml:space="preserve">
+	<div t-name="template_dashboard" >
+		<main class="container my-md-5 my-1">
+			<div class="row" style="min-height: 400px;">
+				<div class="col-md-8 col-sm-12 px-2">
+					<t t-call="template_recent_leads_chart"/>
+				</div>
+				<div class="col-md-4 col-sm-12 px-2">
+					<t t-call="template_total_leads_chart"/>
+				</div>
+			</div>
+		</main>
+		<footer class="container mb-5">
+			<div class="row">
+				<div class="col">
+					<h2 class="text-center font-weight-bold my-4">Connections</h2>
+				</div>
+			</div>
+			<div id="connections_container" class="row justify-content-md-center bg-white">
+				<t t-call="template_connections" />
+			</div>
+		</footer>
+	</div>
+
+	<div
+		t-name="template_connections"
+		t-foreach="this.connections"
+		t-as="connection"
+		t-key="index"
+		class="col-md-4 col-sm-12 p-2 text-center"
+	>
+		<button class="_action btn" t-att-data-connection="connection.id" >
+			<div class="card rounded border-0" style="box-shadow:0 0 6px #00000026">
+				<div class="card-header d-flex p-0">
+					<img
+						class="img-thumbnail flex-auto"
+						t-att-src="connection.image"
+						style="height:75px"
+					/>
+					<div class="px-2 py-4 mx-auto">
+						<h5 class="card-title text-dark mx-auto" t-esc="connection_value.name"/>
+						<h6
+							class="card-subtitle text-muted text-capitalize m-0"
+							t-esc="connection_value.channel"
+						/>
+					</div>
+					<!-- <a class="card-link mt-1 mr-2" t-att-href="connection_value.blog" target="_blank">Blog Link</a> -->
+				</div>
+				<div class="card-body container px-1 py-2">
+					<div class="row m-0">
+						<div class="col-6 p-1">
+							<div
+								class="data_cell d-flex justify-content-between w-100 px-4 py-2"
+								style="background:#EFF1FF;color:#333333;"
+							>
+								<span class="label">Lead</span>
+								<span
+									class="badge badge-light font-weight-bold"
+									t-attf-style="
+										font-size: 100%;
+										min-height: 1.75em;
+										color: {{connection_value.color}}
+									"
+									t-esc="connection_value.lead_count"
+								/>
+							</div>
+						</div>
+						<div class="col-6 p-1">
+							<div
+								class="data_cell d-flex justify-content-between w-100 px-4 py-2"
+								style="background:#EFF1FF;color:#333333;"
+							>
+								<span class="label">Company</span>
+								<span
+									class="badge badge-light font-weight-bold"
+									t-attf-style="
+										font-size: 100%;
+										min-height: 1.75em;
+										color: {{connection_value.color}}
+									"
+									t-esc="connection_value.company_count"
+								/>
+							</div>
+						</div>
+						<div class="col-6 p-1">
+							<div
+								class="data_cell d-flex justify-content-between w-100 px-4 py-2"
+								style="background:#EFF1FF;color:#333333;"
+							>
+								<span class="label">Contact</span>
+								<span
+									class="badge badge-light font-weight-bold"
+									t-attf-style="
+										font-size: 100%;
+										min-height: 1.75em;
+										color: {{connection_value.color}}
+									"
+									t-esc="connection_value.contact_count"
+								/>
+							</div>
+						</div>
+						<div class="col-6 p-1">
+							<div
+								class="data_cell d-flex justify-content-between w-100 px-4 py-2"
+								style="background:#EFF1FF;color:#333333;"
+							>
+								<span class="label">User</span>
+								<span
+									class="badge badge-light font-weight-bold"
+									t-attf-style="
+										font-size: 100%;
+										min-height: 1.75em;
+										color: {{connection_value.color}}
+									"
+									t-esc="connection_value.user_count"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</button>
+	</div>
+
+	<div t-name="template_recent_leads_chart" class="card rounded border-0 h-100">
+		<div class="card-header font-weight-bold bg-transparent py-3" style="height:60px">
+			<div class="row justify-content-between">
+				<div class="col-auto">
+					Recent Leads
+				</div>
+				<div class="col-auto">
+					<select class="custom-select w-auto" id="recent_lead_period" t-on-change="render_recent_lead_chart">
+						<option value="daily" selected="true">Daily</option>
+						<option value="monthly">Monthly</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="card-body p-4">
+			<canvas id="recent_lead_chart"/>
+		</div>
+	</div>
+
+	<div t-name="template_total_leads_chart" class="card rounded border-0 h-100">
+		<div class="card-header font-weight-bold bg-transparent py-3" style="height:60px">
+			Total Leads
+		</div>
+		<div class="card-body p-4">
+			<canvas id="total_lead_chart"/>
+		</div>
+	</div>
+</templates>

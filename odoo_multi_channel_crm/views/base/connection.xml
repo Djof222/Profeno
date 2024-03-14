@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+	<data>
+		<record id="tree_channel_connection" model="ir.ui.view">
+			<field name="name">channel.connection.tree</field>
+			<field name="model">channel.connection</field>
+			<field name="arch" type="xml">
+				<tree
+					decoration-primary="connected"
+					decoration-muted="not connected"
+				>
+					<field name="connected" column_invisible="True"/>
+					<field name="name"/>
+					<field name="channel"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="form_channel_connection" model="ir.ui.view">
+			<field name="name">channel.connection.form</field>
+			<field name="model">channel.connection</field>
+			<field name="arch" type="xml">
+				<form archive="false">
+					<header>
+						<button
+							name="connect"
+							string="Connect"
+							type="object"
+							icon="fa-plug"
+							invisible="not connected == False"
+						/>
+						<button
+							name="disconnect"
+							string="Disconnect"
+							type="object"
+							icon="fa-plug"
+							invisible="connected == False"
+						/>
+						<button
+							name="%(action_channel_import_wizard)d"
+							string="Import"
+							class="oe_highlight"
+							type="action"
+							icon="fa-cloud-download"
+							invisible="connected == False"
+							context="{'default_connection_id': active_id}"
+						/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box"/>
+						<widget
+							name="web_ribbon"
+							title="Connected"
+							invisible="not connected == True"
+							bg_color="bg-success"
+						/>
+						<div style="margin-right:100px;margin-top:50px">
+						<field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+						</div>
+						<div class="oe_title">
+							<field name="connected" />
+							<h1>
+								<field name="name" default_focus="1" placeholder="Name"/>
+							</h1>
+							<field name="channel"/>
+							<notebook name="connection_config">
+								<page name="credentials" string="Credentials"/>
+								<page name="general_config" string="General">
+									<group col="4">
+										<field name="evaluate"/>
+										<field name="default_user_id"/>
+										<field name="api_limit"/>
+										<field name="color" widget="color"/>
+										<field name="blog_url" readonly="True" groups="base.group_no_one"/>
+									</group>
+								</page>
+								<page name="realtime_config" string="Realtime configuration">
+									<group col="4">
+										<field name="realtime_data_sync" widget="boolean_toggle"/>
+										<field name="realtime_delete" widget="boolean_toggle"/>
+									
+
+
+									</group>
+								</page>
+								<page name="state_config" string="States">
+									<field name="stage_ids">
+										<tree editable="bottom" create="false">
+											<field name="name"/>
+											<field name="local_id" required="True"/>
+											<field name="remote_id"/>
+											<field name="lost"/>
+										</tree>
+									</field>
+								</page>
+								<page name="cron_config" string="Scheduler">
+								<group colspan="2">
+									<group>
+										<field name="cron_company"/>
+										<field name="cron_contact"/>
+										<field name="cron_deal"/>
+										<field name="cron_product"/>
+									</group>
+									<group>
+										<field
+											name="cron_company_next_page"
+											groups="base.group_no_one"
+										/>
+										<field
+											name="cron_contact_next_page"
+											groups="base.group_no_one"
+										/>
+										<field
+											name="cron_deal_next_page"
+											groups="base.group_no_one"
+										/>
+										<field
+											name="cron_product_next_page"
+											groups="base.group_no_one"
+										/>
+									</group>
+								</group>
+								</page>
+							</notebook>
+						</div>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_channel_connection" model="ir.actions.act_window">
+			<field name="name">Connections</field>
+			<field name="res_model">channel.connection</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem
+			id="menu_connection"
+			name="Connection"
+			action="action_channel_connection"
+			parent="root_menu_odoo_multi_channel_crm"
+			sequence="20"
+		/>
+	</data>
+</odoo>

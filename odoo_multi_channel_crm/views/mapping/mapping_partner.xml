@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+	<data>
+		<record id="tree_partner_mapping" model="ir.ui.view">
+			<field name="name">res.partner.mapping.tree</field>
+			<field name="model">res.partner.mapping</field>
+			<field name="arch" type="xml">
+				<tree decoration-danger="is_modified">
+					<field name="is_modified" column_invisible="True"/>
+					<field name="connection_id"/>
+					<field name="channel"/>
+					<field name="remote_id"/>
+					<field name="local_id"/>
+					<field name="imported"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="form_company_mapping" model="ir.ui.view">
+			<field name="name">res.partner.mapping.form</field>
+			<field name="model">res.partner.mapping</field>
+			<field name="arch" type="xml">
+				<form archive="false">
+					<sheet>
+						<group>
+							<group>
+								<field name="is_modified" invisible="True"/>
+								<field name="connection_id"/>
+								<field name="channel"/>
+								<field name="imported"/>
+								<field name="remote_id"/>
+								<field name="local_id" domain="[('is_company','=',True)]"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="form_contact_mapping" model="ir.ui.view">
+			<field name="name">res.partner.mapping.form</field>
+			<field name="model">res.partner.mapping</field>
+			<field name="arch" type="xml">
+				<form archive="false">
+					<sheet>
+						<group>
+							<group>
+								<field name="is_modified" invisible="True"/>
+								<field name="connection_id"/>
+								<field name="remote_id"/>
+								<field name="local_id" domain="[('is_company','=',False)]"/>
+								<field name="imported"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_company_mapping" model="ir.actions.act_window">
+			<field name="name">Company Mappings</field>
+			<field name="res_model">res.partner.mapping</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('is_company','=',True)]</field>
+			<field name="view_ids" eval="[
+					(5, 0, 0),
+					(0, 0, {'view_mode': 'tree'}),
+					(0, 0, {'view_mode': 'form', 'view_id': ref('form_company_mapping')})
+				]"
+			/>
+		</record>
+
+		<record id="action_contact_mapping" model="ir.actions.act_window">
+			<field name="name">Contact Mappings</field>
+			<field name="res_model">res.partner.mapping</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('is_company','=',False)]</field>
+			<field name="view_ids" eval="[
+					(5, 0, 0),
+					(0, 0, {'view_mode': 'tree'}),
+					(0, 0, {'view_mode': 'form', 'view_id': ref('form_contact_mapping')})
+				]"
+			/>
+		</record>
+
+		<menuitem
+			id="menu_company_mapping"
+			name="Company"
+			action="action_company_mapping"
+			parent="menu_mapping"
+			sequence="10"
+		/>
+
+		<menuitem
+			id="menu_contact_mapping"
+			name="Contact"
+			action="action_contact_mapping"
+			parent="menu_mapping"
+			sequence="20"
+		/>
+	</data>
+</odoo>
