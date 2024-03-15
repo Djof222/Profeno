@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+	<data>
+		<record id="tree_channel_feed" model="ir.ui.view">
+			<field name="name">channel.feed.tree</field>
+			<field name="model">channel.feed</field>
+			<field name="arch" type="xml">
+				<tree
+					decoration-muted="state=='done'"
+					decoration-danger="state=='error'"
+				>
+					<field name="connection_id"/>
+					<field name="channel"/>
+					<field name="type"/>
+					<field name="name"/>
+					<field name="remote_id"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="form_channel_feed" model="ir.ui.view">
+			<field name="name">channel.feed.form</field>
+			<field name="model">channel.feed</field>
+			<field name="arch" type="xml">
+				<form archive="false">
+					<header>
+						<button
+							name="evaluate_button"
+							string="Evaluate"
+							class="oe_highlight"
+							type="object"
+							invisible="state == 'done'"
+						/>
+						<button
+							name="evaluate_button"
+							string="Evaluate"
+							type="object"
+							invisible="not state == 'done'"
+						/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+					</header>
+					<sheet >
+						<widget
+							name="web_ribbon"
+							title="Draft"
+							invisible="not state == 'draft'"
+							bg_color="bg-info"
+						/>
+						<widget
+							name="web_ribbon"
+							title="Done"
+							invisible="not state == 'done'"
+							bg_color="bg-success"
+						/>
+						<widget
+							name="web_ribbon"
+							title="Error"
+							invisible="not state == 'error'"
+							bg_color="bg-danger"
+						/>
+						<group col="4" >
+							<field name="connection_id" readonly="state == 'done'"/>
+							<field name="channel" readonly="state == 'done'"/>
+							<field name="type" readonly="state == 'done'"/>
+							<field name="remote_id" readonly="state == 'done'"/>
+							<field name="name" readonly="state == 'done'"/>
+						</group>
+						<field name="data" readonly="state == 'done'"/>
+					</sheet>
+					<footer>
+						<field name="log_text" readonly="True"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_company_feed" model="ir.actions.act_window">
+			<field name="name">Company Feeds</field>
+			<field name="res_model">channel.feed</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('type','=','company')]</field>
+			<field name="view_id" ref="tree_channel_feed"/>
+		</record>
+
+		<record id="action_contact_feed" model="ir.actions.act_window">
+			<field name="name">Contact Feeds</field>
+			<field name="res_model">channel.feed</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('type','=','contact')]</field>
+			<field name="view_id" ref="tree_channel_feed"/>
+		</record>
+
+		<record id="action_lead_feed" model="ir.actions.act_window">
+			<field name="name">Lead Feeds</field>
+			<field name="res_model">channel.feed</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('type','=','deal')]</field>
+			<field name="view_id" ref="tree_channel_feed"/>
+		</record>
+
+		<record id="action_product_feed" model="ir.actions.act_window">
+			<field name="name">Product Feeds</field>
+			<field name="res_model">channel.feed</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('type','=','product')]</field>
+			<field name="view_id" ref="tree_channel_feed"/>
+		</record>
+
+		<record id="action_user_feed" model="ir.actions.act_window">
+			<field name="name">User Feeds</field>
+			<field name="res_model">channel.feed</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('type','=','user')]</field>
+			<field name="view_id" ref="tree_channel_feed"/>
+		</record>
+
+		<menuitem
+			id="menu_company_feed"
+			name="Company"
+			action="action_company_feed"
+			parent="menu_channel_feed"
+			sequence="10"
+		/>
+
+		<menuitem
+			id="menu_contact_feed"
+			name="Contact"
+			action="action_contact_feed"
+			parent="menu_channel_feed"
+			sequence="20"
+		/>
+
+		<menuitem
+			id="menu_lead_feed"
+			name="Lead"
+			action="action_lead_feed"
+			parent="menu_channel_feed"
+			sequence="30"
+		/>
+
+		<menuitem
+			id="menu_product_feed"
+			name="Product"
+			action="action_product_feed"
+			parent="menu_channel_feed"
+			sequence="40"
+		/>
+
+		<menuitem
+			id="menu_user_feed"
+			name="User"
+			action="action_user_feed"
+			parent="menu_channel_feed"
+			sequence="50"
+		/>
+
+		<record id="action_evaluate_feed" model="ir.actions.server">
+			<field name="name">Evaluate</field>
+			<field name="model_id" ref="model_channel_feed"/>
+			<field name="state">code</field>
+			<field name="code">action = records.evaluate_button()</field>
+			<field name="binding_model_id" ref="model_channel_feed"/>
+		</record>
+	</data>
+</odoo>
